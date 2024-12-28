@@ -13,20 +13,18 @@ import "@livekit/components-styles";
 
 import { useEffect, useState } from "react";
 import { Track } from "livekit-client";
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 
 export default function Page() {
-  const searchParams = useSearchParams()
+  const { name, room } = useParams<{ room: string; name: string }>()
 
-  const room = searchParams.get('room') || "quickstart-room"
-  const name = searchParams.get('name') || `quickstart-name`
 
   const [token, setToken] = useState("");
 
   useEffect(() => {
     (async () => {
       try {
-        const resp = await fetch(`/api/token?room=${room}&username=${name}`);
+        const resp = await fetch(`/api/token?room=${room || "default"}&username=${name || "default"}`);
         const data = await resp.json();
         setToken(data.token);
       } catch (e) {
