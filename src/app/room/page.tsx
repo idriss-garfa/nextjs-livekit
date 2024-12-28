@@ -13,11 +13,14 @@ import "@livekit/components-styles";
 
 import { useEffect, useState } from "react";
 import { Track } from "livekit-client";
+import { useSearchParams } from "next/navigation";
 
 export default function Page() {
-  // TODO: get user input for room and name
-  const room = "quickstart-room";
-  const name = "quickstart-user";
+  const searchParams = useSearchParams()
+
+  const room = searchParams.get('room') || "quickstart-room"
+  const name = searchParams.get('name') || `quickstart-name`
+
   const [token, setToken] = useState("");
 
   useEffect(() => {
@@ -41,11 +44,14 @@ export default function Page() {
       video={true}
       audio={true}
       token={token}
-      serverUrl={process.env.LIVEKIT_URL}
+      serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
       // Use the default LiveKit theme for nice styles.
       data-lk-theme="default"
       style={{ height: "100dvh" }}
+
     >
+      {room}
+      {name}
       {/* Your custom component with basic video conferencing functionality. */}
       <MyVideoConference />
       {/* The RoomAudioRenderer takes care of room-wide audio for you. */}
@@ -72,6 +78,7 @@ function MyVideoConference() {
       tracks={tracks}
       style={{ height: "calc(100vh - var(--lk-control-bar-height))" }}
     >
+
       {/* The GridLayout accepts zero or one child. The child is used
       as a template to render all passed in tracks. */}
       <ParticipantTile />
